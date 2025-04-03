@@ -1,0 +1,12 @@
+from fastapi import FastAPI
+from slowapi import _rate_limit_exceeded_handler
+from .routers import (AuthRouter)
+from .core import limiter
+
+app = FastAPI()
+
+
+app.state.limiter = limiter
+app.add_exception_handler(429, _rate_limit_exceeded_handler)
+
+app.include_router(AuthRouter)

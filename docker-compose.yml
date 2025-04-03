@@ -1,0 +1,35 @@
+#version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: javi98/threatlog-ai-api:1.0.0
+    container_name: threatlog-ai-api
+    restart: unless-stopped
+    # command: fastapi run app/main.py --port 8000 # Production mode
+    command: fastapi run app/main.py --port 8000 --reload # Development mode
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/code
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11.6.2
+    container_name: threatlog-ai-db
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+networks:
+  threatlog-ai:
+    driver: bridge
+
+volumes:
+  db-data:
