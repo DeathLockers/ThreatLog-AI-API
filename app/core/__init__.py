@@ -12,3 +12,4 @@ from .http_exceptions import (credentials_exception,
                               token_expiration_exception)
 from .slowapi import limiter, LIMIT_VALUE
 from .websocket_connection import ConnectionManager, connection_manager
+from .last_half_hour import get_last_half_hour
