@@ -3,6 +3,7 @@ from .hash_password import hash_password, verify_password
 from .jwt.config import (SECRET_KEY,
                          ALGORITHM,
                          ACCESS_TOKEN_EXPIRE_MINUTES,
+												 TOKEN_TYPE,
                          oauth2_scheme)
 from .jwt.current_user import (get_current_active_user,
                                get_current_user_wewbsocket,
