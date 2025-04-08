@@ -143,6 +143,10 @@
 <pre><code><strong>TIMEZONE=""</strong>
 </code></pre>
 
+<pre><code><span># CORS</span>
+<strong>DOMAINS_ORIGINS_LIST="http://localhost:9000,http://127.0.0.1:9000"</strong>
+</code></pre>
+
 <hr>
 
 <h3>Deploy to Docker <g-emoji class="g-emoji" alias="whale" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f433.png">🐳</g-emoji></h3>
