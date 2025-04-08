@@ -1,5 +1,7 @@
 from .user import get_user_by_email
-from .auth import login, login_access_token
+from .auth import (login,
+                   login_access_token,
+                   extend_token_expiration)
 from .log import (get_log,
                   get_logs,
                   count_logs_in_time_periods,

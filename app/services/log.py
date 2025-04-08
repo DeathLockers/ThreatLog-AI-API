@@ -93,7 +93,8 @@ def count_logs_in_time_periods(db: Session, user: SchemaUser, time_periods: list
 
 def total_type_logs_in_period(db: Session, user: SchemaUser):
   end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
-  start_date = end_date - timedelta(weeks=1)
+  start_date = end_date - timedelta(days=6)
+  start_date = datetime.combine(start_date, datetime.min.time())
 
   anomaly_count = count_type_log(db,
                                  PredictedLogTargets.IS_ANOMALY.value,
@@ -115,7 +116,7 @@ def total_type_logs_in_period(db: Session, user: SchemaUser):
 
 def count_type_logs_in_period(db: Session, user: SchemaUser):
   end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
-  start_date = end_date - timedelta(weeks=1)
+  start_date = end_date - timedelta(days=6)
 
   dates = [start_date + timedelta(days=i) for i in range(7)]
 

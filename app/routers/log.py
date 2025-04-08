@@ -53,7 +53,7 @@ async def chart_line_periods(
   db: Session = Depends(get_db)
 ):
 
-  periods = get_last_half_hour()
+  periods = get_last_half_hour(last_minutes=60)
 
   logs_counts = count_logs_in_time_periods(db, current_user, periods)
 
