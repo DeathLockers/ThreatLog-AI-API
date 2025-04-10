@@ -58,7 +58,7 @@ def get_logs(db: Session, user: SchemaUser, filters: SchemaLogFilter):
   # Order by
   column = getattr(ModelLog, filters.order, None)
 
-  if filters.order == 'DESC':
+  if filters.order_by == 'DESC':
     query = query.order_by(desc(column))
   else:
     query = query.order_by(column)
@@ -77,10 +77,12 @@ def count_logs_in_time_periods(db: Session, user: SchemaUser, time_periods: list
   query = query.join(ModelPredictedLog, ModelLog.id == ModelPredictedLog.log_id
                      ).filter(ModelLog.user_id == user.id,
                               ModelPredictedLog.target == PredictedLogTargets.IS_ANOMALY.value)
-
+  
+  current_date = datetime.now().date()
+  
   # Count by periods
   for time_slot in time_periods:
-    start_time = datetime.strptime(time_slot, '%H:%M')
+    start_time = datetime.strptime(f'{current_date} {time_slot}', '%Y-%m-%d %H:%M')
     end_time = start_time + timedelta(minutes=minutes)
 
     count = query.filter(ModelLog.datetime >= start_time, ModelLog.datetime < end_time
