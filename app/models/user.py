@@ -10,3 +10,5 @@ class User(Base):
   name = Column(String(50), nullable=False, unique=True)
   email = Column(String(50), unique=True, nullable=False, index=True)
   hashed_password = Column(String(150), nullable=False)
+
+  logs = relationship("Log", back_populates="user")

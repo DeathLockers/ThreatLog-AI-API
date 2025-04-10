@@ -13,6 +13,9 @@ from ...schemas import (TokenData as SchemaTokenData,
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
   return verify_access_token(token)
 
+async def get_token(token: Annotated[str, Depends(oauth2_scheme)]):
+  return token
+
 
 async def get_current_active_user(
     current_user: Annotated[SchemaUser, Depends(get_current_user)],
@@ -55,3 +58,8 @@ def verify_access_token(token):
     raise forbidden_exception
 
   return user
+
+async def get_current_token(
+    token: Annotated[SchemaUser, Depends(get_token)],
+):
+  return token
