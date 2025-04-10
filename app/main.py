@@ -1,16 +1,32 @@
-from fastapi import FastAPI, Request, HTTPException
+import asyncio
+from fastapi import Depends, FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+from requests import Session
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
+from contextlib import asynccontextmanager
+
+from app.db.database import get_db
+
 from .routers import (AuthRouter, LogRouter, VerifiedLogRouter, WebsocketRouter)
 from .core import (limiter,
                    DOMAINS_ORIGINS_LIST,
                    http_message_exception_handler,
                    http_message_422_exception_handler,
-                   http_message_429_exception_handler)
+                   http_message_429_exception_handler,
+                   )
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  """Inicializa gestor de conexiones"""
+  from .core import kafka_consumer
+  kafka_task = asyncio.create_task(kafka_consumer(get_db))
+  yield
+  kafka_task.cancel()
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
