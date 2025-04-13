@@ -8,6 +8,7 @@ from ..core import connection_manager
 
 async def kafka_consumer(db: Session):
     """Consumer de Kafka para recibir mensajes de la cola y procesarlos"""
+    from ..services.log import inser_log, insert_predicted
     try:
         consumer = KafkaConsumer(
             'alert_topic',
@@ -25,17 +26,22 @@ async def kafka_consumer(db: Session):
                     for msg in values:
                         if msg is None:
                             continue
-                        client = msg.value['client_id']
-                        log = msg.value['message']
-                        status = msg.value['status']
+                        try:
+                            client = msg.value['client_id']
+                            log = msg.value['message']
+                            status = msg.value['status']
 
-                        if status == 1:
-                            await connection_manager.send_personal_message(log, client)
-                        
-                        # Aquí puedes procesar el mensaje y guardarlo en la base de datos
-                        # db_session.insert()
-                        # Enviar el mensaje al WebSocket correspondiente
-                consumer.commit()
+                            id = inser_log(db, client, log)
+
+                            if status == 1:
+                                pred_id = insert_predicted(db, id, log)
+                                await connection_manager.send_personal_message({"message":log, "id":pred_id}, client)
+                            consumer.commit(msg.offset)
+                            # Aquí puedes procesar el mensaje y guardarlo en la base de datos
+                            # db_session.insert()
+                            # Enviar el mensaje al WebSocket correspondiente
+                        except Exception as ex:
+                            logging.error(f"Error recuperant kafka message: {str(ex)}", ex)
                 logging.info("Esperando nuevos mensajes...")
             except asyncio.CancelledError:
                 logging.info("Consumo de Kafka detenido.")

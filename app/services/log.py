@@ -183,3 +183,26 @@ def filter_search_words(query, search_words: str):
     query = query.filter(and_(*word_filters))
 
   return query
+
+def inser_log(db: Session, user_id:str, message: str) -> str:
+  model_log = ModelLog()
+  model_log.user_id = user_id
+  model_log.host = 'mock'
+  model_log.service = 'mock'
+  model_log.pid = 1
+  model_log.message = message
+  db.add(model_log)
+  db.commit()
+  return model_log.id
+
+def insert_predicted(db: Session, log_id: str, message: str) -> str:
+  model_log = ModelPredictedLog()
+  model_log.log_id = log_id
+  model_log.host = 'mock'
+  model_log.service = 'mock'
+  model_log.message = message
+  model_log.pid = 1
+  db.add(model_log)
+  db.commit()
+  return model_log.id
+

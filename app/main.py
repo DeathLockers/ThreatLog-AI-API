@@ -6,8 +6,9 @@ from requests import Session
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from contextlib import asynccontextmanager
+import contextlib
 
-from app.db.database import get_db
+from app.db.database import get_db_async
 
 from .routers import (AuthRouter, LogRouter, VerifiedLogRouter, WebsocketRouter)
 from .core import (limiter,
@@ -20,11 +21,16 @@ from .core import (limiter,
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-  """Inicializa gestor de conexiones"""
-  from .core import kafka_consumer
-  kafka_task = asyncio.create_task(kafka_consumer(get_db))
-  yield
-  kafka_task.cancel()
+    """Inicializa Kafka on startup"""
+    from .core import kafka_consumer
+    async with get_db_async() as db:  # Use 'async with' if get_db is async
+      kafka_task = asyncio.create_task(kafka_consumer(db))
+      try:
+          yield
+      finally:
+          kafka_task.cancel()
+          with contextlib.suppress(asyncio.CancelledError):
+              await kafka_task
 
 app = FastAPI(lifespan=lifespan)
 
