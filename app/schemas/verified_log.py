@@ -1,3 +1,4 @@
+from typing import Optional
 from importlib import import_module
 from pydantic import BaseModel
 from pydantic import (BaseModel, field_validator)
@@ -16,7 +17,7 @@ class VerifiedLog(VerifiedLogBase):
 
 class UpsertVerifiedLog(BaseModel):
   log_id: str
-  target: bool | str
+  target: Optional[bool]
 
   @field_validator("log_id")
   @classmethod
