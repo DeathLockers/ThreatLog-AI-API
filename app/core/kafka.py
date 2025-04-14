@@ -21,7 +21,7 @@ async def kafka_consumer(db: Session):
         )
         while True:
             try:
-                topics = consumer.poll(timeout_ms=5000)
+                topics = consumer.poll(timeout_ms=500)
                 for topic, values in topics.items():
                     for msg in values:
                         if msg is None:
@@ -43,6 +43,7 @@ async def kafka_consumer(db: Session):
                         except Exception as ex:
                             logging.error(f"Error recuperant kafka message: {str(ex)}", ex)
                 logging.info("Esperando nuevos mensajes...")
+                await asyncio.sleep(1000)
             except asyncio.CancelledError:
                 logging.info("Consumo de Kafka detenido.")
                 break
