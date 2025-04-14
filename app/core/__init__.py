@@ -18,3 +18,7 @@ from .cors import DOMAINS_ORIGINS_LIST
 from .http_exception_handler import (http_message_exception_handler,
                                      http_message_422_exception_handler,
                                      http_message_429_exception_handler)
+from .kafka import kafka_consumer
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
