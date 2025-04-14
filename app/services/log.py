@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from pytz import timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import (cast,
                         desc,
@@ -32,7 +32,7 @@ def get_logs(db: Session, user: SchemaUser, filters: SchemaLogFilter):
 
   # Filter range dates
   if not filters.range_date:
-    end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+    end_date = datetime.now(timezone(getenv("TIMEZONE")))
     start_date = end_date - timedelta(weeks=1)
 
     start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -94,7 +94,7 @@ def count_logs_in_time_periods(db: Session, user: SchemaUser, time_periods: list
 
 
 def total_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+  end_date = datetime.now(timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
   start_date = datetime.combine(start_date, datetime.min.time())
 
@@ -117,7 +117,7 @@ def total_type_logs_in_period(db: Session, user: SchemaUser):
 
 
 def count_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+  end_date = datetime.now(timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
 
   dates = [start_date + timedelta(days=i) for i in range(7)]

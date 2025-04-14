@@ -11,3 +11,4 @@ aiofiles==24.1.0
 slowapi==0.1.9
 pylint==3.3.4
 kafka-python~=2.1.4
+pytz

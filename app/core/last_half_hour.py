@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from pytz import timezone
 from . import getenv
 
 
 def get_last_half_hour(every_minutes=5, last_minutes=30) -> list:
-  now = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+  now = datetime.now(timezone(getenv("TIMEZONE")))
 
   minutes = (now.minute // every_minutes) * every_minutes
   last_half_hour_start = now.replace(minute=minutes, second=0, microsecond=0) - timedelta(minutes=last_minutes)
