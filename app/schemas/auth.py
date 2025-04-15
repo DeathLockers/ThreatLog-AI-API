@@ -13,3 +13,10 @@ class TokenData(BaseModel):
 class Login(BaseModel):
   email: EmailStr
   password: str = Field(min_length=8)
+
+
+class UserAuth(BaseModel):
+  id: str
+  name: str
+  email: str
+  token: str

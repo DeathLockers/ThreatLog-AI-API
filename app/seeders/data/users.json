@@ -1,31 +1,31 @@
 [
 	{
 		"id": "04982418-c001-70b3-41ad-03ec1c7bf3ad",
-		"name": "Apple",
+		"name": "CaixaBank",
 		"email": "client1@email.com",
 		"hashed_password": "Pass-1234"
 	},
 	{
 		"id": "74483418-80a1-7046-6900-846bcce8974a",
-		"name": "Microsoft",
+		"name": "Grifols",
 		"email": "client2@email.com",
 		"hashed_password": "Pass-1234"
 	},
 	{
 		"id": "e4d8f4f8-70d1-7029-60ab-5ef8db65c8de",
-		"name": "Amazon",
+		"name": "Mango",
 		"email": "client3@email.com",
 		"hashed_password": "Pass-1234"
 	},
 	{
 		"id": "8458d418-b081-706b-94bd-30831023663a",
-		"name": "Tesla",
+		"name": "Bertelsmann",
 		"email": "client4@email.com",
 		"hashed_password": "Pass-1234"
 	},
 	{
 		"id": "0448f4a8-e0f1-7052-63a8-8883ece693e0",
-		"name": "Google",
+		"name": "Cava Freixenet",
 		"email": "client5@email.com",
 		"hashed_password": "Pass-1234"
 	}
