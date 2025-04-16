@@ -36,6 +36,7 @@ def update_all_read_notifications(db: Session, user_id: str):
                            ).join(ModelLog, ModelNotification.log_id == ModelLog.id
                                   ).filter(ModelLog.user_id == user_id, ModelNotification.is_read == False
                                            ).all()
+
   for notification in notifications:
     notification.is_read = True
 
