@@ -11,7 +11,7 @@ async def kafka_consumer(db: Session):
     from ..services.log import inser_log, insert_predicted
     try:
         consumer = KafkaConsumer(
-            'alert_topic',
+            os.environ.get('KAFKA_CONSUMER_TOPIC', 'predicted_logs'),
             bootstrap_servers=os.environ.get('KAFKA_HOST', 'localhost:9092'), 
             group_id='alert_consumers',
             enable_auto_commit=False,
