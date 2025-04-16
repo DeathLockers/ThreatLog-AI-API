@@ -8,8 +8,8 @@ services:
     image: javi98/threatlog-ai-api:1.0.0
     container_name: threatlog-ai-api
     restart: unless-stopped
-    # command: fastapi run app/main.py --port 8000 # Production mode
-    command: fastapi run app/main.py --port 8000 --reload # Development mode
+    # command: fastapi run app/main.py --host 0.0.0.0 --port 8000 # Production mode
+    command: fastapi run app/main.py --host 0.0.0.0 --port 8000 --reload # Development mode
     ports:
       - 8000:8000
     volumes:

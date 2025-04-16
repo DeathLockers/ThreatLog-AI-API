@@ -36,7 +36,8 @@ async def http_message_exception_handler(request: Request, exc: HTTPException):
 async def http_message_422_exception_handler(request: Request, exc: RequestValidationError):
   return JSONResponse(
       status_code=422,
-      content={"message": "The data entered is not valid", "details": exc.errors()}
+      # content={"message": "The data entered is not valid", "details": exc.errors()}
+      content={"message": "The data entered is not valid"}
     )
 
 
@@ -46,4 +47,11 @@ async def http_message_429_exception_handler(request: Request, exc: RateLimitExc
       content={
           "message": "Too many requests. Please try again later.",
       },
+  )
+
+
+async def http_message_400_exception_handler(request, exc: ValueError):
+  return JSONResponse(
+      status_code=422,
+      content={"message": "The data entered is not valid", "detail": str(exc)}
   )
