@@ -92,3 +92,7 @@ class LogChartTypesCountPeriodList(BaseModel):
 class LogChartTypesCountPeriod(BaseModel):
   daily_anomalies: LogChartTypesCountPeriodList
   daily_non_anomalies: LogChartTypesCountPeriodList
+
+class LogNotification(BaseModel):
+  message: str
+  datetime: datetime

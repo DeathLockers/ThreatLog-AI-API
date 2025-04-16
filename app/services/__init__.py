@@ -8,3 +8,7 @@ from .log import (get_log,
                   total_type_logs_in_period,
                   count_type_logs_in_period)
 from .verified_log import upsert_verified_log
+from .notification import (get_notification,
+                           get_all_notifications,
+                           update_read_notification,
+                           update_all_read_notifications)
