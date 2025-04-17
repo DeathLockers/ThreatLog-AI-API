@@ -52,8 +52,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                cub kafka-ready -b broker:9093 1 30 && \
                kafka-topics --create --topic customer_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093 && \
-               kafka-topics --create --topic predicted_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093 && \
-               kafka-topics --create --topic alert_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093'"
+               kafka-topics --create --topic predicted_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093'"
   
   api:
     build:
