@@ -6,6 +6,8 @@ from kafka import KafkaConsumer, TopicPartition
 from requests import Session
 from ..core import connection_manager
 
+pred_threshold = os.environ.get("ALERT_PRED_THRESHOLD",.96)  # Umbral de predicción para enviar el mensaje al WebSocket
+
 async def kafka_consumer(db: Session):
     """Consumer de Kafka para recibir mensajes de la cola y procesarlos"""
     from ..services.log import inser_log, insert_predicted
@@ -29,11 +31,11 @@ async def kafka_consumer(db: Session):
                         try:
                             client = msg.value['client_id']
                             log = msg.value['message']
-                            status = msg.value['status']
+                            pred = msg.value['prediction']
 
                             id = inser_log(db, client, log)
 
-                            if status == 1:
+                            if pred >= pred_threshold:
                                 pred_id = insert_predicted(db, id, log)
                                 await connection_manager.send_personal_message({"message":log, "id":pred_id}, client)
                             consumer.commit(msg.offset)
