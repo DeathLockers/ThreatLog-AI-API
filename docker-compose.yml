@@ -93,6 +93,14 @@ services:
     volumes:
     - ./producer_logs:/data
 
+  model-predictor:
+    image: ghcr.io/deathlockers/tlmodelserver:main
+    container_name: threatlog-ai-predictor
+    restart: unless-stopped
+    depends_on:
+      - broker
+    environment:
+      KAFKA_HOST: broker:9093
 networks:
   threatlog-ai:
     driver: bridge
