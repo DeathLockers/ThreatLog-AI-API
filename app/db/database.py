@@ -1,10 +1,19 @@
+from contextlib import asynccontextmanager
 from ..db import SessionLocal
 
 
 def get_db():
-  db = SessionLocal()
+  Session = SessionLocal()
 
   try:
-    yield db
+      yield Session
   finally:
-    db.close()
+    Session.close()
+
+@asynccontextmanager
+async def get_db_async():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        await db.close()
