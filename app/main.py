@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
     from .core import kafka_consumer
     async with get_db_async() as db:  # Use 'async with' if get_db is async
       kafka_task = asyncio.create_task(kafka_consumer(db))
+      await asyncio.sleep(5)
       try:
           yield
       finally:

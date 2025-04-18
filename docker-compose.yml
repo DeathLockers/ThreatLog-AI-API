@@ -65,6 +65,8 @@ services:
     command: fastapi run app/main.py --port 8000 --reload # Development mode
     ports:
       - 8000:8000
+    environment:
+    - KAFKA_HOST=broker:9093
     volumes:
       - ./:/code
     depends_on:
