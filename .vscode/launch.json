@@ -5,13 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: FastAPI",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": [ "app.main:app", "--reload" ],
-            "jinja": true,
-            "envFile": "${workspaceFolder}/.env"
+          "name": "API:DEV",
+          "type": "debugpy",
+          "request": "launch",
+          "module": "fastapi",
+          "cwd": "${workspaceFolder}/app", # Edit path where main.py
+          "args": [
+            "dev" # Dev mode
+          ],
+          "justMyCode": false,
+          "env": {
+            "ENVIRONMENT": "dev"
+          }
         }
     ]
 }

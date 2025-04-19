@@ -52,8 +52,8 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                cub kafka-ready -b broker:9093 1 30 && \
                kafka-topics --create --topic customer_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093 && \
-               kafka-topics --create --topic store_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093 && \
-               kafka-topics --create --topic alert_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093'"
+               kafka-topics --create --topic predicted_logs --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server broker:9093'"
+  
   api:
     build:
       context: .
@@ -65,6 +65,8 @@ services:
     command: fastapi run app/main.py --port 8000 --reload # Development mode
     ports:
       - 8000:8000
+    environment:
+    - KAFKA_HOST=broker:9093
     volumes:
       - ./:/code
     depends_on:
@@ -80,6 +82,27 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  # Produce mensajes con los logs en archivos en ./producer_logs
+  log-producer:
+    image: ghcr.io/deathlockers/tlsender:main
+    depends_on:
+    - broker
+    environment:
+    - KAFKA_HOST=broker:9093
+    - RUNNER_INTERVAL_SECONDS=15
+    # - KAFKA_CONSUMER_TOPIC=customer_logs # set by default
+    # - KAFKA_PRODUCER_TOPIC=predicted_logs # set by default
+    volumes:
+    - ./producer_logs:/data
+
+  model-predictor:
+    image: ghcr.io/deathlockers/tlmodelserver:main
+    container_name: threatlog-ai-predictor
+    restart: unless-stopped
+    depends_on:
+      - broker
+    environment:
+      KAFKA_HOST: broker:9093
 networks:
   threatlog-ai:
     driver: bridge
