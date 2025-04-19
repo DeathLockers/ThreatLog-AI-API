@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import jwt
-from zoneinfo import ZoneInfo
+from pytz import timezone
 from sqlalchemy.orm import Session
 from ..core import (verify_password,
                     SECRET_KEY,
@@ -40,7 +40,7 @@ def generate_access_token(data: dict, expires_delta: timedelta | None = None):
   to_encode = data.copy()
 
   if expires_delta:
-    expire = datetime.now(ZoneInfo(getenv("TIMEZONE"))) + expires_delta
+    expire = datetime.now(timezone(getenv("TIMEZONE"))) + expires_delta
 
   to_encode.update({"exp": expire})
   encoded_jwt = jwt.encode(
@@ -53,7 +53,7 @@ def generate_access_token(data: dict, expires_delta: timedelta | None = None):
 def extend_token_expiration(token: str) -> str:
   decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
-  new_expiration = datetime.now(ZoneInfo(getenv("TIMEZONE"))) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+  new_expiration = datetime.now(timezone(getenv("TIMEZONE"))) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
   decoded_token["exp"] = new_expiration.timestamp()
 
