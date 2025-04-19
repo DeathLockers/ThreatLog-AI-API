@@ -16,3 +16,14 @@ class PredictedLogBase(BaseModel):
 class PredictedLog(PredictedLogBase):
   class Config:
     from_attributes = True
+
+
+class PredictedLogKafkaConsumser(BaseModel):
+  host: int
+  service: int
+  pid: int
+  message: int
+  timestamp: int
+  time_execution: int
+  target: bool
+  log_id: str

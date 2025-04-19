@@ -92,3 +92,30 @@ class LogChartTypesCountPeriodList(BaseModel):
 class LogChartTypesCountPeriod(BaseModel):
   daily_anomalies: LogChartTypesCountPeriodList
   daily_non_anomalies: LogChartTypesCountPeriodList
+
+
+class LogRawKafkaConsumer(BaseModel):
+  log_host: str
+  log_service: str
+  log_pid: int
+  log_message: str
+  log_datetime: datetime
+  log_time_execution: int
+  log_user_id: str
+  predicted_log_host: int
+  predicted_log_service: int
+  predicted_log_pid: int
+  predicted_log_message: int
+  predicted_log_timestamp: int
+  predicted_log_time_execution: int
+  predicted_log_target: bool
+
+
+class LogKafkaConsumser(BaseModel):
+  host: str
+  service: str
+  pid: int
+  message: str
+  datetime: str
+  time_execution: int
+  user_id: str

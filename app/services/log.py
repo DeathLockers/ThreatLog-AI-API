@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import uuid
-import pytz
+from pytz import timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import (cast,
                         desc,
@@ -14,6 +14,7 @@ from sqlalchemy import (cast,
 from ..models import (Log as ModelLog,
                       PredictedLog as ModelPredictedLog)
 from ..schemas import (LogFilter as SchemaLogFilter,
+                       LogKafkaConsumser as SchemaLogKafkaConsumser,
                        User as SchemaUser)
 from ..core import getenv
 from ..enums.predicted_log_targets import PredictedLogTargets
@@ -33,7 +34,7 @@ def get_logs(db: Session, user: SchemaUser, filters: SchemaLogFilter):
 
   # Filter range dates
   if not filters.range_date:
-    end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+    end_date = datetime.now(timezone(getenv("TIMEZONE")))
     start_date = end_date - timedelta(weeks=1)
 
     start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -95,7 +96,7 @@ def count_logs_in_time_periods(db: Session, user: SchemaUser, time_periods: list
 
 
 def total_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+  end_date = datetime.now(timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
   start_date = datetime.combine(start_date, datetime.min.time())
 
@@ -118,7 +119,7 @@ def total_type_logs_in_period(db: Session, user: SchemaUser):
 
 
 def count_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+  end_date = datetime.now(timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
 
   dates = [start_date + timedelta(days=i) for i in range(7)]
@@ -185,37 +186,18 @@ def filter_search_words(query, search_words: str):
 
   return query
 
-def inser_log(db: Session, user_id:str, message: str) -> str:
-  model_log = ModelLog()
-  model_log.id = uuid.uuid4()
-  model_log.user_id = user_id
-  model_log.message = message
-  # TODO: fill host, service, pid
-  model_log.host = 'mock'
-  model_log.service = 'mock'
-  model_log.pid = 1
-  # TODO: not sure if this is correct
-  model_log.datetime = datetime.now(pytz.timezone(getenv("TIMEZONE"))).astimezone(pytz.utc)
-  # TODO: get time execution
-  model_log.time_execution = 0
-  db.add(model_log)
-  db.commit()
-  return model_log.id
 
-def insert_predicted(db: Session, log_id: str, message: str) -> str:
-  model_log = ModelPredictedLog()
-  model_log.id = uuid.uuid4()
-  model_log.log_id = log_id
-  # TODO: fill host, service, pid
-  model_log.host = 'mock'
-  model_log.service = 'mock'
-  model_log.message = message
-  model_log.pid = 1
-  # TODO: get time execution
-  model_log.time_execution = 0
-  # TODO: not sure if this is correct
-  model_log.timestamp = datetime.now(pytz.timezone(getenv("TIMEZONE"))).astimezone(pytz.utc)
-  db.add(model_log)
-  db.commit()
-  return model_log.id
+def insert_log(db: Session, log: SchemaLogKafkaConsumser) -> str:
 
+  id = uuid.uuid4()
+
+  db_log = ModelLog(
+      **log.model_dump(),
+      id=id
+    )
+
+  db.add(db_log)
+  db.commit()
+  db.refresh(db_log)
+
+  return str(id)
