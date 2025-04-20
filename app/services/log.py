@@ -187,7 +187,7 @@ def filter_search_words(query, search_words: str):
 
 def inser_log(db: Session, user_id:str, message: str) -> str:
   model_log = ModelLog()
-  model_log.id = uuid.uuid4()
+  model_log.id = str(uuid.uuid4())
   model_log.user_id = user_id
   model_log.message = message
   # TODO: fill host, service, pid
@@ -199,15 +199,14 @@ def inser_log(db: Session, user_id:str, message: str) -> str:
   # TODO: get time execution
   model_log.time_execution = 0
   db.add(model_log)
-  db.commit()
   return model_log.id
 
 def insert_predicted(db: Session, log_id: str, message: str) -> str:
   model_log = ModelPredictedLog()
-  model_log.id = uuid.uuid4()
+  model_log.id = str(uuid.uuid4())
   model_log.log_id = log_id
   # TODO: fill host, service, pid
-  model_log.host = 'mock'
+  model_log.host = -1
   model_log.service = 'mock'
   model_log.message = message
   model_log.pid = 1
@@ -216,6 +215,5 @@ def insert_predicted(db: Session, log_id: str, message: str) -> str:
   # TODO: not sure if this is correct
   model_log.timestamp = datetime.now(pytz.timezone(getenv("TIMEZONE"))).astimezone(pytz.utc)
   db.add(model_log)
-  db.commit()
   return model_log.id
 

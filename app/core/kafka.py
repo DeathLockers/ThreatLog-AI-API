@@ -3,6 +3,7 @@ import json
 import os
 import logging
 from kafka import KafkaConsumer, TopicPartition
+from kafka.structs import OffsetAndMetadata
 from requests import Session
 from ..core import connection_manager
 
@@ -39,12 +40,16 @@ async def kafka_consumer(db: Session):
                             if pred >= pred_threshold:
                                 pred_id = insert_predicted(db, id, log)
                                 await connection_manager.send_personal_message({"message":log, "id":pred_id}, client)
-                            consumer.commit(msg.offset)
+                            consumer.commit({topic: OffsetAndMetadata(msg.offset, None, msg.leader_epoch)})
                             # Aquí puedes procesar el mensaje y guardarlo en la base de datos
                             # db_session.insert()
                             # Enviar el mensaje al WebSocket correspondiente
+                            db.commit()
+                            db.refresh(id)
                         except Exception as ex:
                             logging.error(f"Error recuperant kafka message: {str(ex)}", ex)
+                            db.rollback()
+
                 logging.debug("Esperando nuevos mensajes...")
                 await asyncio.sleep(5)
             except asyncio.CancelledError:
