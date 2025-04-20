@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import uuid
+from uuid import uuid4
 from pytz import timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import (cast,
@@ -187,9 +187,9 @@ def filter_search_words(query, search_words: str):
   return query
 
 
-def insert_log(db: Session, log: SchemaLogKafkaConsumser) -> str:
+def insert_log(db: Session, log: SchemaLogKafkaConsumser):
 
-  id = uuid.uuid4()
+  id = uuid4()
 
   db_log = ModelLog(
       **log.model_dump(),
@@ -200,4 +200,4 @@ def insert_log(db: Session, log: SchemaLogKafkaConsumser) -> str:
   db.commit()
   db.refresh(db_log)
 
-  return str(id)
+  return str(id), db_log.datetime.strftime('%Y-%m-%d %H:%M:%S')

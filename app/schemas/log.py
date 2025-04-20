@@ -2,7 +2,7 @@ from importlib import import_module
 from datetime import datetime
 from typing import Optional
 from pydantic_core.core_schema import FieldValidationInfo
-from pydantic import (BaseModel, computed_field, field_validator)
+from pydantic import (BaseModel, field_validator)
 from .predicted_log import PredictedLog as SchemaPredictedLog
 from .verified_log import VerifiedLog as SchemaVerifiedLog
 from ..enums.columns_log import ColumnsLog as EnumColumnsLog
@@ -119,3 +119,14 @@ class LogKafkaConsumser(BaseModel):
   datetime: str
   time_execution: int
   user_id: str
+
+
+class LogNotification(BaseModel):
+  message: str
+  datetime: str
+
+  @field_validator("datetime", mode="before")
+  def format_datetime(cls, v):
+    if isinstance(v, datetime):
+      return v.strftime('%Y-%m-%d %H:%M:%S')
+    return v

@@ -6,7 +6,9 @@ from .log import (Log,
                   LogTypesTotal,
                   LogChartTypesCountPeriod,
                   LogKafkaConsumser,
-									LogRawKafkaConsumer)
+                  LogRawKafkaConsumer,
+                  LogNotification)
 from .predicted_log import (PredictedLog,
                             PredictedLogKafkaConsumser)
 from .verified_log import (VerifiedLog, UpsertVerifiedLog)
+from .notification import Notification

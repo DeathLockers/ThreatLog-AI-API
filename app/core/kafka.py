@@ -11,7 +11,7 @@ from ..schemas import (LogKafkaConsumser as SchemaLogKafkaConsumser,
 
 
 async def kafka_consumer(db: Session):
-  from ..services import insert_log, insert_predicted_log
+  from ..services import insert_log, insert_predicted_log, insert_notification
 
   """Consumer de Kafka para recibir mensajes de la cola y procesarlos"""
   try:
@@ -49,7 +49,7 @@ async def kafka_consumer(db: Session):
                   user_id=log_dict['log_user_id']
               )
 
-              log_id = insert_log(db, log)
+              log_id, log_datetime = insert_log(db, log)
 
               if (log_dict['predicted_log_target']):
                 predicted_log_target = True
@@ -70,10 +70,11 @@ async def kafka_consumer(db: Session):
               insert_predicted_log(db, predicted_log)
 
               if predicted_log_target:
-                # TODO Insert notification and get id notification
+                notification_id = insert_notification(db, log_id)
+
                 await connection_manager.send_personal_message(
-                  {"id": "d4004b56-6724-4bc3-a3ce-20d0330536da",
-                   "log": {"message": log_dict['log_message'], "datetime": log_dict['log_datetime']}
+                  {"id": notification_id,
+                   "log": {"message": log_dict['log_message'], "datetime": log_datetime}
                    },
                   log_dict['log_user_id']
                 )
