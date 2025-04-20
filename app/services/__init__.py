@@ -6,5 +6,7 @@ from .log import (get_log,
                   get_logs,
                   count_logs_in_time_periods,
                   total_type_logs_in_period,
-                  count_type_logs_in_period)
+                  count_type_logs_in_period,
+									insert_log)
 from .verified_log import upsert_verified_log
+from .predicted_log import insert_predicted_log

@@ -11,7 +11,7 @@ pred_threshold = os.environ.get("ALERT_PRED_THRESHOLD",.96)  # Umbral de predicc
 
 async def kafka_consumer(db: Session):
     """Consumer de Kafka para recibir mensajes de la cola y procesarlos"""
-    from ..services.log import inser_log, insert_predicted
+    from ..services import insert_log, insert_predicted_log
     try:
         consumer = KafkaConsumer(
             os.environ.get('KAFKA_CONSUMER_TOPIC', 'predicted_logs'),
@@ -35,17 +35,16 @@ async def kafka_consumer(db: Session):
                             log = msg.value['message']
                             pred = msg.value['prediction']
 
-                            id = inser_log(db, client, log)
+                            id = insert_log(db, client, log)
 
                             if pred >= pred_threshold:
-                                pred_id = insert_predicted(db, id, log)
+                                pred_id = insert_predicted_log(db, id, pred)
                                 await connection_manager.send_personal_message({"message":log, "id":pred_id}, client)
                             consumer.commit({topic: OffsetAndMetadata(msg.offset, None, msg.leader_epoch)})
                             # Aquí puedes procesar el mensaje y guardarlo en la base de datos
                             # db_session.insert()
                             # Enviar el mensaje al WebSocket correspondiente
                             db.commit()
-                            db.refresh(id)
                         except Exception as ex:
                             logging.error(f"Error recuperant kafka message: {str(ex)}", ex)
                             db.rollback()
