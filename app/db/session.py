@@ -7,7 +7,7 @@ creedentials = {
     "driver": getenv("DB_DRIVER"),
     "user": getenv("DB_USERNAME"),
     "password": getenv("DB_PASSWORD"),
-    "host": getenv("DB_HOST"),
+    "host": 'localhost',
     "port": getenv("DB_PORT"),
     "database": getenv("DB_DATABASE"),
 }
