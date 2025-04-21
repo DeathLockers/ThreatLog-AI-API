@@ -4,6 +4,8 @@ from .log import (Log,
                   LogFilter,
                   LogChartLinePeriod,
                   LogTypesTotal,
-                  LogChartTypesCountPeriod)
+                  LogChartTypesCountPeriod,
+									LogNotification)
 from .predicted_log import PredictedLog
 from .verified_log import (VerifiedLog, UpsertVerifiedLog)
+from .notification import Notification

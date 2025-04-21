@@ -10,3 +10,8 @@ from .log import (get_log,
 									insert_log)
 from .verified_log import upsert_verified_log
 from .predicted_log import insert_predicted_log
+from .notification import (get_notification,
+                           get_all_notifications,
+													 insert_notification,
+                           update_read_notification,
+                           update_all_read_notifications)

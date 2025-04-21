@@ -10,10 +10,15 @@ import contextlib
 
 from app.db.database import get_db_async
 
-from .routers import (AuthRouter, LogRouter, VerifiedLogRouter, WebsocketRouter)
+from .routers import (AuthRouter, 
+                      LogRouter, 
+                      VerifiedLogRouter, 
+                      NotificationRouter,
+                      WebsocketRouter)
 from .core import (limiter,
                    DOMAINS_ORIGINS_LIST,
                    http_message_exception_handler,
+                   http_message_400_exception_handler,
                    http_message_422_exception_handler,
                    http_message_429_exception_handler,
                    )
@@ -47,6 +52,11 @@ limiter = Limiter(key_func=lambda: "global")
 app.state.limiter = limiter
 
 
+@app.exception_handler(ValueError)
+async def value_error_exception_handler(request, exc: ValueError):
+  return await http_message_400_exception_handler(request, exc)
+
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
   return await http_message_exception_handler(request, exc)
@@ -64,4 +74,5 @@ async def rate_limit_exceeded_exception_handler(request: Request, exc: RateLimit
 app.include_router(AuthRouter)
 app.include_router(LogRouter)
 app.include_router(VerifiedLogRouter)
+app.include_router(NotificationRouter)
 app.include_router(WebsocketRouter)

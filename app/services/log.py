@@ -186,7 +186,7 @@ def filter_search_words(query, search_words: str):
   return query
 
 
-def insert_log(db: Session, user_id: str, log: str) -> str:
+def insert_log(db: Session, user_id: str, log: str) -> ModelLog:
 
   log_list = log.split(',')
 
@@ -238,4 +238,4 @@ def insert_log(db: Session, user_id: str, log: str) -> str:
 
   db.add(db_log)
 
-  return id
+  return db_log

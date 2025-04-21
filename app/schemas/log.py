@@ -92,3 +92,14 @@ class LogChartTypesCountPeriodList(BaseModel):
 class LogChartTypesCountPeriod(BaseModel):
   daily_anomalies: LogChartTypesCountPeriodList
   daily_non_anomalies: LogChartTypesCountPeriodList
+
+
+class LogNotification(BaseModel):
+  message: str
+  datetime: datetime
+
+  @field_validator("datetime", mode="before")
+  def format_datetime(cls, v):
+    if isinstance(v, datetime):
+      return v.strftime('%Y-%m-%d %H:%M:%S')
+    return v
