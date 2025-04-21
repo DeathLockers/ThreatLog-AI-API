@@ -27,7 +27,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"token\", jsonData.token_type + ' ' + jsonData.access_token);"
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -50,7 +50,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"client1@email.com\",\r\n    \"password\": \"Pass-1234\"\r\n}",
+							"raw": "{\r\n    \"email\": \"client1@email.com\",\r\n    \"password\": \"Pass-12344\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -308,7 +308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"log_id\": \"001b4cdf-8172-4b8b-a1fc-d89e2767d73e\",\r\n    \"target\": 1\r\n}",
+							"raw": "{\r\n    \"log_id\": \"002e8683-2923-441f-9a9d-28daf3dac422\",\r\n    \"target\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -323,6 +323,123 @@
 							"path": [
 								"verified_logs",
 								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "Show all notifications",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/notifications",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read notification",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/notifications/8cba7737-eab9-4d1c-bf8a-9fc992a6edc6/read",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"8cba7737-eab9-4d1c-bf8a-9fc992a6edc6",
+								"read"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read all notifications",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/notifications/read/all",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"read",
+								"all"
 							]
 						}
 					},
