@@ -10,7 +10,7 @@ class Notification(Base):
   __tablename__ = "notifications"
 
   id = Column(String(150), primary_key=True)
-  is_read = Column(Boolean, nullable=False)
+  is_read = Column(Boolean, default=False, nullable=False)
   datetime = Column(DateTime, default=datetime.now(ZoneInfo(getenv("TIMEZONE"))), nullable=False)
   log_id = Column(String(150), ForeignKey("logs.id"), unique=True)
 

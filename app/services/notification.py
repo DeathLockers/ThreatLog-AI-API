@@ -1,3 +1,4 @@
+from uuid import uuid4
 from sqlalchemy import (desc)
 from sqlalchemy.orm import Session
 from ..models import (Notification as ModelNotification,
@@ -16,6 +17,20 @@ def get_all_notifications(db: Session, user_id: str):
                   ).join(ModelLog, ModelNotification.log_id == ModelLog.id
                          ).filter(ModelNotification.is_read == False, ModelLog.user_id == user_id
                                   ).order_by(desc(ModelNotification.datetime)).all()
+
+
+def insert_notification(db: Session, log_id: str) -> str:
+
+  id = str(uuid4())
+
+  db_notification = ModelNotification(
+      log_id=log_id,
+      id=id
+    )
+
+  db.add(db_notification)
+
+  return id
 
 
 def update_read_notification(db: Session, user_id: str, notification_id: str):

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from uuid import uuid4
+import pytz
 from sqlalchemy.orm import Session
 from sqlalchemy import (cast,
                         desc,
@@ -32,7 +33,7 @@ def get_logs(db: Session, user: SchemaUser, filters: SchemaLogFilter):
 
   # Filter range dates
   if not filters.range_date:
-    end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+    end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
     start_date = end_date - timedelta(weeks=1)
 
     start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -94,7 +95,7 @@ def count_logs_in_time_periods(db: Session, user: SchemaUser, time_periods: list
 
 
 def total_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+  end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
   start_date = datetime.combine(start_date, datetime.min.time())
 
@@ -117,7 +118,7 @@ def total_type_logs_in_period(db: Session, user: SchemaUser):
 
 
 def count_type_logs_in_period(db: Session, user: SchemaUser):
-  end_date = datetime.now(ZoneInfo(getenv("TIMEZONE")))
+  end_date = datetime.now(pytz.timezone(getenv("TIMEZONE")))
   start_date = end_date - timedelta(days=6)
 
   dates = [start_date + timedelta(days=i) for i in range(7)]
@@ -183,3 +184,58 @@ def filter_search_words(query, search_words: str):
     query = query.filter(and_(*word_filters))
 
   return query
+
+
+def insert_log(db: Session, user_id: str, log: str) -> ModelLog:
+
+  log_list = log.split(',')
+
+  id = str(uuid4())
+
+  try:
+    date_str = log_list[0]
+    current_year = datetime.now(pytz.timezone(getenv("TIMEZONE"))).year
+    date_str = f"{current_year} {date_str}"
+    log_datetime = datetime.strptime(date_str, '%Y %b %d %H:%M:%S')
+  except IndexError:
+    log_datetime = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+
+  try:
+    host = log_list[1]
+  except IndexError:
+    host = "Host unknown"
+
+  try:
+    service = log_list[2]
+  except IndexError:
+    service = "Service unknown"
+
+  try:
+    pid = log_list[3]
+  except IndexError:
+    pid = 0
+
+  try:
+    message = log_list[4].replace("\n", "")
+  except IndexError:
+    message = "Message default"
+
+  try:
+    time_execution = log_list[5]
+  except IndexError:
+    time_execution = 0
+
+  db_log = ModelLog(
+      id=id,
+      datetime=log_datetime,
+      host=host,
+      service=service,
+      pid=pid,
+      message=message,
+      time_execution=time_execution,
+      user_id=user_id
+  )
+
+  db.add(db_log)
+
+  return db_log
