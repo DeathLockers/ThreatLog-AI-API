@@ -15,7 +15,7 @@ from ..models import (Log as ModelLog,
                       PredictedLog as ModelPredictedLog)
 from ..schemas import (LogFilter as SchemaLogFilter,
                        User as SchemaUser)
-from ..core import getenv
+from ..core import getenv, get_field_list
 from ..enums.predicted_log_targets import PredictedLogTargets
 from ..enums.columns_log import ColumnsLog
 
@@ -192,38 +192,21 @@ def insert_log(db: Session, user_id: str, log: str) -> ModelLog:
 
   id = str(uuid4())
 
+  datetime_now = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+
   try:
     date_str = log_list[0]
-    current_year = datetime.now(pytz.timezone(getenv("TIMEZONE"))).year
+    current_year = datetime_now.year
     date_str = f"{current_year} {date_str}"
-    log_datetime = datetime.strptime(date_str, '%Y %b %d %H:%M:%S')
-  except IndexError:
-    log_datetime = datetime.now(pytz.timezone(getenv("TIMEZONE")))
+    log_datetime = datetime_now.strptime(date_str, '%Y %b %d %H:%M:%S')
+  except (IndexError, ValueError):
+    log_datetime = datetime_now
 
-  try:
-    host = log_list[1]
-  except IndexError:
-    host = "Host unknown"
-
-  try:
-    service = log_list[2]
-  except IndexError:
-    service = "Service unknown"
-
-  try:
-    pid = log_list[3]
-  except IndexError:
-    pid = 0
-
-  try:
-    message = log_list[4].replace("\n", "")
-  except IndexError:
-    message = "Message default"
-
-  try:
-    time_execution = log_list[5]
-  except IndexError:
-    time_execution = 0
+  host = get_field_list(log_list, 1, "Host unknown")
+  service = get_field_list(log_list, 2, "Service unknown")
+  pid = get_field_list(log_list, 3, 0)
+  message = get_field_list(log_list, 4, "Message default", lambda x: x.replace("\n", ""))
+  time_execution = get_field_list(log_list, 5, 0)
 
   db_log = ModelLog(
       id=id,
