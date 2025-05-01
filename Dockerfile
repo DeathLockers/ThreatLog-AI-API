@@ -8,6 +8,6 @@ RUN apt-get update
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY ./app /code/
+COPY ./ /code/
 
 # CMD ["fastapi", "run", "app/main.py", "--port", "8000", "--reload"]
