@@ -27,7 +27,12 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+									"var token = jsonData.token;\r",
+									"\r",
+									"var tokenEncoded = encodeURIComponent(token);\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"token\", token);\r",
+									"postman.setEnvironmentVariable(\"token_uri_encoded\", tokenEncoded);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -50,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"client1@email.com\",\r\n    \"password\": \"Pass-12344\"\r\n}",
+							"raw": "{\r\n    \"email\": \"client1@email.com\",\r\n    \"password\": \"Pass-1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -257,7 +262,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"page\": 1,\r\n    \"items\": 50,\r\n    \"filter\": \"ssh ip-\",\r\n    \"target\": 1,\r\n    \"range_date\": [\"2025-03-25\", \"2025-03-25\"],\r\n    \"order\": \"datetime\",\r\n    \"order_by\": \"DESC\"\r\n}",
+							"raw": "{\r\n    \"page\": 1,\r\n    \"items\": 50,\r\n    \"filter\": \"\",\r\n    \"target\": 1,\r\n    \"range_date\": [\"2025-04-21\", \"2025-04-21\"],\r\n    \"order\": \"datetime\",\r\n    \"order_by\": \"DESC\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
