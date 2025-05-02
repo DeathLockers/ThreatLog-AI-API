@@ -67,8 +67,8 @@ services:
       - 8000:8000
     environment:
     - KAFKA_HOST=broker:9093
-    # volumes:
-    #   - ./:/code
+    volumes:
+      - ./:/code
     depends_on:
       - db
 

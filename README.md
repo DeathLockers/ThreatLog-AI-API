@@ -167,8 +167,8 @@
 <pre><code>cd ThreatLog-AI-API</pre></code>
 <pre><code>cp .env.example .env</pre></code>
 <pre><code>docker compose up -d</pre></code>
-<pre><code>docker compose exec app chmod +x ./docker-config/run.sh</pre></code>
-<pre><code>docker compose exec app ./docker-config/run.sh</code>
+<pre><code>docker compose exec api chmod +x ./docker-config/run.sh</pre></code>
+<pre><code>docker compose exec api ./docker-config/run.sh</code>
 </pre>
 
 <span>Once you have the containers deployed, you can access the API at </span> <a href="http://localhost:8000" target="_blank">http://localhost:8000</a>
