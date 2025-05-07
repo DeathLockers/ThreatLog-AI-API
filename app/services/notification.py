@@ -1,8 +1,12 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from uuid import uuid4
+import pytz
 from sqlalchemy import (desc)
 from sqlalchemy.orm import Session
 from ..models import (Notification as ModelNotification,
                       Log as ModelLog)
+from ..core import getenv
 
 
 def get_notification(db: Session, user_id: str, notification_id: str):
@@ -25,6 +29,7 @@ def insert_notification(db: Session, log_id: str) -> str:
 
   db_notification = ModelNotification(
       log_id=log_id,
+      datetime=datetime.now(pytz.timezone(getenv("TIMEZONE"))),
       id=id
     )
 
