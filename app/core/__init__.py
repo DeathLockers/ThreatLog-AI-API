@@ -21,6 +21,7 @@ from .http_exception_handler import (http_message_exception_handler,
                                      http_message_429_exception_handler)
 from .kafka import kafka_consumer
 from .get_list_field import get_field_list
+from .convert_to_int import convert_to_int
 import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")

@@ -15,7 +15,7 @@ from ..models import (Log as ModelLog,
                       PredictedLog as ModelPredictedLog)
 from ..schemas import (LogFilter as SchemaLogFilter,
                        User as SchemaUser)
-from ..core import getenv, get_field_list
+from ..core import getenv, get_field_list, convert_to_int
 from ..enums.predicted_log_targets import PredictedLogTargets
 from ..enums.columns_log import ColumnsLog
 
@@ -213,9 +213,9 @@ def insert_log(db: Session, user_id: str, log: str) -> ModelLog:
       datetime=log_datetime,
       host=host,
       service=service,
-      pid=pid,
+      pid=convert_to_int(pid),
       message=message,
-      time_execution=time_execution,
+      time_execution=convert_to_int(time_execution),
       user_id=user_id
   )
 
